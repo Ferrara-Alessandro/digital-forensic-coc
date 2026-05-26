@@ -1,0 +1,20 @@
+[
+  {
+    "name": "collezione_PG_PM",
+    "policy": "OR('PGMSP.member', 'PMMSP.member')",
+    "requiredPeerCount": 0,
+    "maxPeerCount": 3,
+    "blockToLive": 1000000,
+    "memberOnlyRead": true,
+    "memberOnlyWrite": true
+  },
+  {
+    "name": "collezione_PM_LAB",
+    "policy": "OR('PMMSP.member', 'LABMSP.member')",
+    "requiredPeerCount": 0,
+    "maxPeerCount": 3,
+    "blockToLive": 1000000,
+    "memberOnlyRead": true,
+    "memberOnlyWrite": true
+  }
+]
