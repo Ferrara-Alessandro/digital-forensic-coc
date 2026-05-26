@@ -1,8 +1,8 @@
 # Chain of custody (CoC) su Hyperledger Fabric
 
-Questo progetto realizza un sistema di chain of custody digitale per reperti fisici in ambito giudiziario, basato su Hyperledger Fabric. L'idea è tracciare in modo immutabile ogni passaggio di custodia — dal sequestro iniziale da parte della PG, all'autorizzazione del PM, fino all'analisi in laboratorio e alla riconsegna — senza affidarsi a un'unica autorità centrale. I documenti e le evidenze digitali collegati al reperto vengono cifrati e archiviati su IPFS; sul ledger rimangono solo i riferimenti e i metadati, con i dati sensibili accessibili esclusivamente alle organizzazioni autorizzate tramite le collezioni dati privati di Fabric.
+Questo progetto realizza un sistema di chain of custody digitale per reperti fisici in ambito giudiziario, basato su Hyperledger Fabric. L'idea è tracciare in modo immutabile ogni passaggio di custodia — dal sequestro iniziale da parte della PG fino all'analisi in laboratorio e alla riconsegna — senza affidarsi a un'unica autorità centrale. I documenti e le evidenze digitali collegati al reperto vengono cifrati e archiviati su IPFS; sul ledger rimangono solo i riferimenti e i metadati, con i dati sensibili accessibili esclusivamente alle organizzazioni autorizzate tramite le collezioni dati privati di Fabric.
 
-L'obiettivo finale è automatizzare l'intero processo tramite un agente AI che, al posto di un operatore umano, decide quali azioni compiere sul reperto, genera i documenti necessari e invoca le funzioni del chaincode nei momenti opportuni. Il modulo di generazione dei contenuti e l'integrazione con l'agente verranno aggiunti al repository in una fase successiva.
+L'automazione del processo è già integrata: il server MCP in `agente_coc/` espone tutte le operazioni Fabric come tool per agenti AI. Un agente può creare un reperto, avanzarne il ciclo di vita e interrogare il ledger in linguaggio naturale, senza conoscere la CLI o la struttura dei certificati. Il modulo di generazione automatica dei contenuti verrà aggiunto in una fase successiva.
 
 ---
 
@@ -13,9 +13,11 @@ L'obiettivo finale è automatizzare l'intero processo tramite un agente AI che, 
 | `chaincode/` | Smart contract Go: stati del reperto, documenti tipizzati, evidenze, collezioni PDC |
 | `cmd/upload/` | Client caricamento: cifra il file, lo carica su IPFS, registra sul ledger |
 | `cmd/download/` | Client recupero: legge i metadati dal ledger, scarica da IPFS, decifra |
+| `cmd/workflow/` | Client operazioni di ciclo di vita: avanzamento stati, query reperto, storia transazioni |
+| `agente_coc/` | Server MCP: espone le operazioni Fabric come tool per agenti AI (Cursor, Claude Desktop, ecc.) |
 | `infrastruttura_blockchain/` | `configtx.yaml`, Docker Compose, cryptogen, definizione collezioni PDC |
 
-Gli script di bootstrap della rete, il deploy lifecycle e i test end-to-end restano in locale e verranno aggiunti al repository in un secondo momento.
+Il modulo di generazione dei contenuti verrà aggiunto al repository in una fase successiva.
 
 ---
 
@@ -111,6 +113,7 @@ collections_config.json          →  lifecycle peer →  chaincode installato e
 cd chaincode && go build -o /dev/null .
 cd cmd/upload && go build -o /dev/null .
 cd cmd/download && go build -o /dev/null .
+cd cmd/workflow && go build -o /dev/null .
 ```
 
 ---
