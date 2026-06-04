@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -31,6 +32,7 @@ type documentoUploadResult struct {
 	IDReperto          string `json:"idReperto,omitempty"`
 	IngestOrg          string `json:"ingestOrg"`
 	CID                string `json:"cid"`
+	ChiaveB64          string `json:"chiaveB64"`
 	TransactionID      string `json:"transactionId"`
 	InputSizeBytes     int64  `json:"inputSizeBytes"`
 	EncryptedSizeBytes int    `json:"encryptedSizeBytes,omitempty"`
@@ -47,6 +49,7 @@ type evidenzaUploadResult struct {
 	Classe             string `json:"classe,omitempty"`
 	IngestOrg          string `json:"ingestOrg"`
 	CID                string `json:"cid"`
+	ChiaveB64          string `json:"chiaveB64"`
 	TransactionID      string `json:"transactionId"`
 	InputSizeBytes     int64  `json:"inputSizeBytes"`
 	EncryptedSizeBytes int    `json:"encryptedSizeBytes,omitempty"`
@@ -317,6 +320,7 @@ func runDocumento(f runDocumentoFlags) error {
 		IDReperto:          strings.TrimSpace(f.IDReperto),
 		IngestOrg:          orgKey,
 		CID:                cid,
+		ChiaveB64:          base64.StdEncoding.EncodeToString(encRes.Key),
 		InputSizeBytes:     fi.Size(),
 		EncryptedSizeBytes: int(encRes.EncryptedBytes),
 		TempoEncryptOnlyMs: encRes.EncryptOnlyTime.Milliseconds(),
@@ -406,6 +410,7 @@ func runEvidenza(f runEvidenzaFlags) error {
 		Classe:             strings.TrimSpace(f.Classe),
 		IngestOrg:          orgKey,
 		CID:                cid,
+		ChiaveB64:          base64.StdEncoding.EncodeToString(encRes.Key),
 		InputSizeBytes:     fi.Size(),
 		EncryptedSizeBytes: int(encRes.EncryptedBytes),
 		TempoEncryptOnlyMs: encRes.EncryptOnlyTime.Milliseconds(),
