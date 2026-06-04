@@ -15,6 +15,7 @@ import (
 
 type readResult struct {
 	Mode               string `json:"mode"`
+	Org                string `json:"org"`
 	IDCaso             string `json:"idCaso,omitempty"`
 	IDDocumento        string `json:"idDocumento,omitempty"`
 	IDEvidenza         string `json:"idEvidenza,omitempty"`
@@ -52,6 +53,7 @@ func run() error {
 	outDir := flag.String("out-dir", "downloads", "")
 	outFile := flag.String("out-file", "", "")
 	noWrite := flag.Bool("no-write", false, "")
+	org := flag.String("org", "pg", "")
 	flag.Parse()
 
 	m := strings.ToLower(strings.TrimSpace(*mode))
@@ -63,7 +65,7 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	contract, gw, conn, err := openPGContract(defaultFabricEnv(pkiAbs), *channel, *chaincode)
+	contract, gw, conn, err := openOrgContract(defaultFabricEnv(pkiAbs), *channel, *chaincode, *org)
 	if err != nil {
 		return fmt.Errorf("fabric gateway: %w", err)
 	}
@@ -136,6 +138,7 @@ func run() error {
 
 	out := readResult{
 		Mode:               m,
+		Org:                strings.ToLower(strings.TrimSpace(*org)),
 		IDCaso:             caso,
 		CID:                cid,
 		OutputPath:         outputPath,
