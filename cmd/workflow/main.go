@@ -28,7 +28,10 @@ type workflowResult struct {
 // Risultato per le query (lettura senza transazione).
 type queryResult struct {
 	Mode          string          `json:"mode"`
-	IDReperto     string          `json:"idReperto"`
+	IDReperto     string          `json:"idReperto,omitempty"`
+	IDCaso        string          `json:"idCaso,omitempty"`
+	IDDocumento   string          `json:"idDocumento,omitempty"`
+	IDEvidenza    string          `json:"idEvidenza,omitempty"`
 	Org           string          `json:"org"`
 	Payload       json.RawMessage `json:"payload"`
 	TempoTotaleMs int64           `json:"tempoTotaleMs"`
@@ -50,13 +53,18 @@ func main() {
 func run() error {
 	startTotal := time.Now()
 
-	mode := flag.String("mode", "", "leggi-reperto | storia-reperto | richiedi-analisi | avvia-trasporto | ricevi-laboratorio | completa-analisi | prepara-riconsegna | deposita-sede")
+	mode := flag.String("mode", "", "leggi-reperto | storia-reperto | leggi-documento | leggi-evidenza | richiedi-analisi | avvia-trasporto | ricevi-laboratorio | completa-analisi | prepara-riconsegna | deposita-sede")
 	idReperto := flag.String("id-reperto", "", "")
 	org := flag.String("org", "", "pg | pm | lab (default: scelto in base al mode)")
 	pki := flag.String("pki", filepath.Join("infrastruttura_blockchain", "certificati_pki"), "")
 	channel := flag.String("channel", "canale-coc", "")
 	chaincode := flag.String("chaincode", "reperto", "")
 	submitTimeout := flag.Duration("submit-timeout", 120*time.Second, "")
+
+	// Argomenti per leggi-documento / leggi-evidenza
+	idCaso := flag.String("id-caso", "", "")
+	idDocumento := flag.String("id-documento", "", "")
+	idEvidenza := flag.String("id-evidenza", "", "")
 
 	// Argomenti per richiedi-analisi
 	idLab := flag.String("id-lab", "", "")
@@ -82,9 +90,9 @@ func run() error {
 
 	m := strings.ToLower(strings.TrimSpace(*mode))
 	if m == "" {
-		return fmt.Errorf("-mode obbligatorio: leggi-reperto | storia-reperto | richiedi-analisi | avvia-trasporto | ricevi-laboratorio | completa-analisi | prepara-riconsegna | deposita-sede")
+		return fmt.Errorf("-mode obbligatorio: leggi-reperto | storia-reperto | leggi-documento | leggi-evidenza | richiedi-analisi | avvia-trasporto | ricevi-laboratorio | completa-analisi | prepara-riconsegna | deposita-sede")
 	}
-	if strings.TrimSpace(*idReperto) == "" {
+	if m != "leggi-documento" && m != "leggi-evidenza" && strings.TrimSpace(*idReperto) == "" {
 		return fmt.Errorf("-id-reperto obbligatorio")
 	}
 
@@ -142,6 +150,36 @@ func run() error {
 			IDReperto:     *idReperto,
 			Org:           orgKey,
 			Payload:       json.RawMessage(data),
+			TempoTotaleMs: time.Since(start).Milliseconds(),
+		})
+
+	case "leggi-documento":
+		if strings.TrimSpace(*idCaso) == "" || strings.TrimSpace(*idDocumento) == "" {
+			return fmt.Errorf("mode leggi-documento: -id-caso e -id-documento obbligatori")
+		}
+		start := time.Now()
+		data, err := evaluateQuery(ctx, contract, "LeggiDocumento", *idCaso, *idDocumento)
+		if err != nil {
+			return err
+		}
+		return writeJSON(queryResult{
+			Mode: m, IDCaso: *idCaso, IDDocumento: *idDocumento,
+			Org: orgKey, Payload: json.RawMessage(data),
+			TempoTotaleMs: time.Since(start).Milliseconds(),
+		})
+
+	case "leggi-evidenza":
+		if strings.TrimSpace(*idCaso) == "" || strings.TrimSpace(*idEvidenza) == "" {
+			return fmt.Errorf("mode leggi-evidenza: -id-caso e -id-evidenza obbligatori")
+		}
+		start := time.Now()
+		data, err := evaluateQuery(ctx, contract, "LeggiEvidenza", *idCaso, *idEvidenza)
+		if err != nil {
+			return err
+		}
+		return writeJSON(queryResult{
+			Mode: m, IDCaso: *idCaso, IDEvidenza: *idEvidenza,
+			Org: orgKey, Payload: json.RawMessage(data),
 			TempoTotaleMs: time.Since(start).Milliseconds(),
 		})
 

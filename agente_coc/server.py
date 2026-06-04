@@ -199,6 +199,25 @@ def deposita_in_sede(
 # ---------------------------------------------------------------------------
 
 @mcp.tool()
+def leggi_documento(id_caso: str, id_documento: str, org: str = "pg") -> dict:
+    """
+    Legge i metadati pubblici e privati di un documento dal ledger.
+    Restituisce CID, chiave cifrata (base64), tipo, autore e timestamp.
+    Utile per recuperare la chiave prima di completa_analisi o deposita_in_sede.
+    """
+    return _workflow("-mode", "leggi-documento", "-id-caso", id_caso, "-id-documento", id_documento, "-org", org)
+
+
+@mcp.tool()
+def leggi_evidenza(id_caso: str, id_evidenza: str, org: str = "pg") -> dict:
+    """
+    Legge i metadati pubblici e privati di un'evidenza dal ledger.
+    Restituisce CID, chiave cifrata (base64), classe e timestamp.
+    """
+    return _workflow("-mode", "leggi-evidenza", "-id-caso", id_caso, "-id-evidenza", id_evidenza, "-org", org)
+
+
+@mcp.tool()
 def registra_documento(
     file: str,
     id_caso: str,

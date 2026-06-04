@@ -146,6 +146,10 @@ var orgProfile = map[string]struct {
 }
 
 // Apro il contratto Fabric firmando come Admin dell'organizzazione indicata.
+// Routing del peer fisico:
+//   - pg  → peer PG (ha collezione_PG_PM)
+//   - pm  → peer PG (gossip asincrono: PM non ha ancora collezione_PG_PM)
+//   - lab → peer LAB (ha appena scritto collezione_PM_LAB, i dati ci sono)
 func openOrgContract(env fabricEnv, channel, chaincode, org string) (*client.Contract, *client.Gateway, *grpc.ClientConn, error) {
 	orgKey := strings.ToLower(strings.TrimSpace(org))
 	if orgKey == "" {
@@ -155,9 +159,13 @@ func openOrgContract(env fabricEnv, channel, chaincode, org string) (*client.Con
 	if !ok {
 		return nil, nil, nil, fmt.Errorf("org non supportata: %q (pg, pm o lab)", org)
 	}
-	peer, ok := env.Peers[orgKey]
+	peerKey := orgKey
+	if orgKey == "pm" {
+		peerKey = "pg"
+	}
+	peer, ok := env.Peers[peerKey]
 	if !ok {
-		return nil, nil, nil, fmt.Errorf("peer non configurato per org %q", orgKey)
+		return nil, nil, nil, fmt.Errorf("peer non configurato per org %q", peerKey)
 	}
 	certPEM, keyPEM, err := loadCertAndKey(adminMSPPath(env.PKIRoot, prof.OrgHost))
 	if err != nil {
