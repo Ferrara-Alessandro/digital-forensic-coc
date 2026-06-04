@@ -1,4 +1,4 @@
-// Interrogo Fabric come Admin PG per ottenere cid e chiave.
+// Interrogo Fabric per ottenere cid e chiave, con org configurabile.
 package main
 
 import (
@@ -23,7 +23,11 @@ const aesKeySize = 32
 
 type orgMSP string
 
-const mspPG orgMSP = "PGMSP"
+const (
+	mspPG  orgMSP = "PGMSP"
+	mspPM  orgMSP = "PMMSP"
+	mspLAB orgMSP = "LABMSP"
+)
 
 type peerDial struct {
 	Address   string
@@ -34,6 +38,8 @@ type peerDial struct {
 type fabricEnv struct {
 	PKIRoot string
 	PeerPG  peerDial
+	PeerPM  peerDial
+	PeerLAB peerDial
 }
 
 func defaultFabricEnv(pkiRoot string) fabricEnv {
@@ -43,6 +49,16 @@ func defaultFabricEnv(pkiRoot string) fabricEnv {
 			Address:   "localhost:7051",
 			TLSHost:   "peer0.pg.it",
 			TLSCACert: filepath.Join(pkiRoot, "peerOrganizations/pg.it/peers/peer0.pg.it/tls/ca.crt"),
+		},
+		PeerPM: peerDial{
+			Address:   "localhost:8051",
+			TLSHost:   "peer0.pm.it",
+			TLSCACert: filepath.Join(pkiRoot, "peerOrganizations/pm.it/peers/peer0.pm.it/tls/ca.crt"),
+		},
+		PeerLAB: peerDial{
+			Address:   "localhost:9051",
+			TLSHost:   "peer0.lab.it",
+			TLSCACert: filepath.Join(pkiRoot, "peerOrganizations/lab.it/peers/peer0.lab.it/tls/ca.crt"),
 		},
 	}
 }
@@ -124,8 +140,28 @@ func grpcConn(peer peerDial) (*grpc.ClientConn, error) {
 }
 
 // Mi collego al peer PG per le letture.
-func openPGContract(env fabricEnv, channel, chaincode string) (*client.Contract, *client.Gateway, *grpc.ClientConn, error) {
-	certPEM, keyPEM, err := loadCertAndKey(adminMSPPath(env.PKIRoot, "pg.it"))
+func openOrgContract(env fabricEnv, channel, chaincode, org string) (*client.Contract, *client.Gateway, *grpc.ClientConn, error) {
+	orgKey := strings.ToLower(strings.TrimSpace(org))
+	var msp orgMSP
+	var orgHost string
+	switch orgKey {
+	case "pm":
+		msp = mspPM
+		orgHost = "pm.it"
+	case "lab":
+		msp = mspLAB
+		orgHost = "lab.it"
+	default:
+		msp = mspPG
+		orgHost = "pg.it"
+	}
+	// Il chaincode è installato solo su peer0.pg.it: tutti i download
+	// transitano per quel peer, ma firmano con l'identità dell'org
+	// richiedente. Il PDC restituisce solo i campi accessibili al MSP
+	// del firmatario (collection policy).
+	peer := env.PeerPG
+
+	certPEM, keyPEM, err := loadCertAndKey(adminMSPPath(env.PKIRoot, orgHost))
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -133,7 +169,7 @@ func openPGContract(env fabricEnv, channel, chaincode string) (*client.Contract,
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	id, err := identity.NewX509Identity(string(mspPG), cert)
+	id, err := identity.NewX509Identity(string(msp), cert)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -146,7 +182,7 @@ func openPGContract(env fabricEnv, channel, chaincode string) (*client.Contract,
 		return nil, nil, nil, err
 	}
 
-	conn, err := grpcConn(env.PeerPG)
+	conn, err := grpcConn(peer)
 	if err != nil {
 		return nil, nil, nil, err
 	}

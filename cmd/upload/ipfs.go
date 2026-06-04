@@ -52,7 +52,8 @@ func (c *IPFSClient) AddReader(ctx context.Context, filename string, reader io.R
 	}
 	endpoint.Path = path.Join(endpoint.Path, "/api/v0/add")
 	q := endpoint.Query()
-	q.Set("pin", "true")
+	q.Set("pin", "false")
+	q.Set("offline", "true")
 	endpoint.RawQuery = q.Encode()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint.String(), pipeReader)

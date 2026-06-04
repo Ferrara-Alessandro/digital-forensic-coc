@@ -26,7 +26,7 @@ def _run(args: list[str]) -> dict:
 
 
 def _upload(*args) -> dict:
-    return _run([str(BIN / "upload")] + list(args) + ["-pki", str(PKI)])
+    return _run([str(BIN / "upload")] + list(args) + ["-pki", str(PKI), "-ipfs-timeout", "120s"])
 
 
 def _workflow(*args) -> dict:
@@ -263,10 +263,12 @@ def registra_evidenza(
 def scarica_documento(
     id_caso: str,
     id_documento: str,
+    org: str = "pg",
     out_dir: str = "",
 ) -> dict:
     """
     Legge i metadati dal ledger, scarica il file da IPFS e lo decifra.
+    Usa le credenziali dell'org indicata (pg | pm | lab) per la query Fabric.
     Restituisce il percorso del file ripristinato e i tempi di operazione.
     """
     out = out_dir or str(ROOT / "downloads")
@@ -274,6 +276,7 @@ def scarica_documento(
         "-mode", "documento",
         "-id-caso", id_caso,
         "-id-documento", id_documento,
+        "-org", org,
         "-out-dir", out,
     )
 
@@ -282,16 +285,19 @@ def scarica_documento(
 def scarica_evidenza(
     id_caso: str,
     id_evidenza: str,
+    org: str = "pg",
     out_dir: str = "",
 ) -> dict:
     """
     Legge i metadati dal ledger, scarica il file da IPFS e lo decifra.
+    Usa le credenziali dell'org indicata (pg | pm | lab) per la query Fabric.
     """
     out = out_dir or str(ROOT / "downloads")
     return _download(
         "-mode", "evidenza",
         "-id-caso", id_caso,
         "-id-evidenza", id_evidenza,
+        "-org", org,
         "-out-dir", out,
     )
 
