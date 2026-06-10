@@ -6,11 +6,16 @@ da qualsiasi agente MCP-compatibile (Cursor, Claude Desktop, ecc.).
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 from fastmcp import FastMCP
 
 ROOT = Path(__file__).parent.parent.resolve()
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from generazione_reperti import genera_immagine, genera_testo
 BIN = ROOT / "bin"
 PKI = ROOT / "infrastruttura_blockchain" / "certificati_pki"
 
@@ -192,6 +197,33 @@ def deposita_in_sede(
         "-chiave-verbale-riconsegna", chiave_verbale_riconsegna,
         "-org", "pg",
     )
+
+
+# ---------------------------------------------------------------------------
+# Generazione contenuti probatori (AI)
+# ---------------------------------------------------------------------------
+
+@mcp.tool()
+def genera_evidenza_testo(
+    descrizione: str,
+    tipo: str = "",
+    model: str = "llama3",
+) -> dict:
+    """
+    Crea un file testuale di evidenza in generazione_reperti/testi/.
+    Prova Ollama in locale; se non risponde usa un template.
+    Restituisce percorso relativo, SHA-256 e tipo usato.
+    """
+    return genera_testo(descrizione, tipo=tipo, model=model)
+
+
+@mcp.tool()
+def genera_evidenza_immagine(descrizione: str, seed: int = 12345) -> dict:
+    """
+    Crea un PNG in generazione_reperti/immagini/ con Stable Diffusion.
+    Richiede il venv in generazione_reperti/ (setup.sh).
+    """
+    return genera_immagine(descrizione, seed=seed)
 
 
 # ---------------------------------------------------------------------------

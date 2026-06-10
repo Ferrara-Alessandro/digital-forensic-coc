@@ -2,7 +2,7 @@
 
 Questo progetto realizza un sistema di chain of custody digitale per reperti fisici in ambito giudiziario, basato su Hyperledger Fabric. L'idea è tracciare in modo immutabile ogni passaggio di custodia — dal sequestro iniziale da parte della PG fino all'analisi in laboratorio e alla riconsegna — senza affidarsi a un'unica autorità centrale. I documenti e le evidenze digitali collegati al reperto vengono cifrati e archiviati su IPFS; sul ledger rimangono solo i riferimenti e i metadati, con i dati sensibili accessibili esclusivamente alle organizzazioni autorizzate tramite le collezioni dati privati di Fabric.
 
-L'automazione del processo è già integrata: il server MCP in `agente_coc/` espone tutte le operazioni Fabric come tool per agenti AI. Un agente può creare un reperto, avanzarne il ciclo di vita e interrogare il ledger in linguaggio naturale, senza conoscere la CLI o la struttura dei certificati. Il modulo di generazione automatica dei contenuti verrà aggiunto in una fase successiva.
+L'automazione del processo è integrata: il server MCP in `agente_coc/` espone le operazioni Fabric e, tramite `generazione_reperti/`, la creazione di file di evidenza di prova (testo con Ollama, immagini con Stable Diffusion). L'agente può quindi preparare un reperto, registrarlo e avanzarne il ciclo di vita senza usare direttamente la CLI.
 
 ---
 
@@ -14,10 +14,9 @@ L'automazione del processo è già integrata: il server MCP in `agente_coc/` esp
 | `cmd/upload/` | Client caricamento: cifra il file, lo carica su IPFS, registra sul ledger |
 | `cmd/download/` | Client recupero: legge i metadati dal ledger, scarica da IPFS, decifra |
 | `cmd/workflow/` | Client operazioni di ciclo di vita: avanzamento stati, query reperto, storia transazioni |
-| `agente_coc/` | Server MCP: espone le operazioni Fabric come tool per agenti AI (Cursor, Claude Desktop, ecc.) |
+| `agente_coc/` | Server MCP: operazioni Fabric + generazione evidenze per agenti AI |
+| `generazione_reperti/` | Generatori testo (Ollama) e immagini (Stable Diffusion) |
 | `infrastruttura_blockchain/` | `configtx.yaml`, Docker Compose, cryptogen, definizione collezioni PDC |
-
-Il modulo di generazione dei contenuti verrà aggiunto al repository in una fase successiva.
 
 ---
 

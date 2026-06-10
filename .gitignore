@@ -12,17 +12,11 @@ vendor/
 .env
 .env.*
 
-# --- Ambiente Python & IA (Fondamentale) ---
-# Escludiamo la cartella con i giga di librerie
-generazione_reperti/supporto_ia/
+# --- Ambiente Python ---
+generazione_reperti/.venv/
 venv/
-# Escludiamo i file di compilazione Python
 __pycache__/
 *.pyc
-
-# --- Immagini e Risultati ---
-# Escludiamo le immagini generate (tracciamo solo il codice, non i test)
-generazione_reperti/immagini/*.png
 
 # --- Output benchmark e artefatti generati ---
 benchmark_output/
@@ -35,6 +29,8 @@ cmd/download/download
 infrastruttura_blockchain/reperto_*.tar.gz
 generazione_reperti/immagini/*.jpg
 generazione_reperti/immagini/*.png
+generazione_reperti/testi/reperto_*.txt
+!generazione_reperti/testi/.gitkeep
 
 # --- Editor & Strumenti ---
 .vscode/
