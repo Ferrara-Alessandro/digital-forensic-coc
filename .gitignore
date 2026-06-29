@@ -1,0 +1,38 @@
+# --- Infrastruttura Hyperledger & Docker ---
+infrastruttura_blockchain/canal_crea.pb
+infrastruttura_blockchain/certificati_pki/
+infrastruttura_blockchain/*.block
+infrastruttura_blockchain/atti_canale/
+bin/
+config/
+crypto-config/
+*.log
+docker-compose-*.yaml
+vendor/
+.env
+.env.*
+
+# --- Ambiente Python ---
+generazione_reperti/.venv/
+venv/
+__pycache__/
+*.pyc
+
+# --- Output benchmark e artefatti generati ---
+benchmark_output/
+benchmark_*.csv
+.tmp_benchmark_ingest/
+.tmp_benchmark_*/
+downloads/
+cmd/upload/upload
+cmd/download/download
+infrastruttura_blockchain/reperto_*.tar.gz
+generazione_reperti/immagini/*.jpg
+generazione_reperti/immagini/*.png
+generazione_reperti/testi/reperto_*.txt
+!generazione_reperti/testi/.gitkeep
+
+# --- Editor & Strumenti ---
+.vscode/
+node_modules/
+.DS_Store
