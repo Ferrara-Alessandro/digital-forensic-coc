@@ -1,0 +1,16 @@
+{
+  "name": "coc-caliper",
+  "private": true,
+  "description": "Benchmark Hyperledger Caliper per chaincode reperto (CoC)",
+  "scripts": {
+    "bind": "caliper bind --caliper-bind-sut fabric:2.2",
+    "bench:read": "caliper launch manager --caliper-workspace . --caliper-networkconfig networks/network.yaml --caliper-benchconfig benchmarks/readReperto.yaml --caliper-flow-only-test",
+    "bench:query": "caliper launch manager --caliper-workspace . --caliper-networkconfig networks/network.yaml --caliper-benchconfig benchmarks/queryMix.yaml --caliper-flow-only-test",
+    "bench:create": "caliper launch manager --caliper-workspace . --caliper-networkconfig networks/network.yaml --caliper-benchconfig benchmarks/createReperto.yaml --caliper-flow-only-test"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.10.3",
+    "@hyperledger/caliper-cli": "0.6.0",
+    "fabric-network": "^2.2.20"
+  }
+}

@@ -1,0 +1,70 @@
+test:
+  name: coc-read-reperto
+  description: Query ReadReperto — curva di carico (5 livelli TPS, 60s ciascuno)
+  workers:
+    type: local
+    number: 4
+  rounds:
+    - label: read-05tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-10tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 10
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-25tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 25
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-50tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-75tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 75
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+
+monitor:
+  interval: 1
+  type:
+    - process
+  process:
+    - metric: cpu
+    - metric: memory

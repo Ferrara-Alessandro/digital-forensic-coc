@@ -36,3 +36,8 @@ generazione_reperti/testi/reperto_*.txt
 .vscode/
 node_modules/
 .DS_Store
+# --- Artefatti runtime test/demo ---
+tests/.work/
+tests/fabric_caliper/caliper/node_modules/
+uploads/
+tmp/

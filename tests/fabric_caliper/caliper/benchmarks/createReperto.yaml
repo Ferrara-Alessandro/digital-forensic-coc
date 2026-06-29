@@ -1,0 +1,45 @@
+test:
+  name: coc-create-reperto
+  description: Invoke CreaReperto (endorsement PG+PM) — carico basso, durata 60s
+  workers:
+    type: local
+    number: 1
+  rounds:
+    - label: create-0.5tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 0.5
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+    - label: create-1tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 1
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+    - label: create-2tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 2
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+
+monitor:
+  interval: 1
+  type:
+    - process
+  process:
+    - metric: cpu
+    - metric: memory
