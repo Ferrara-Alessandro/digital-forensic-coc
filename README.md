@@ -17,6 +17,8 @@ L'automazione del processo è integrata: il server MCP in `agente_coc/` espone l
 | `agente_coc/` | Server MCP: operazioni Fabric + generazione evidenze per agenti AI |
 | `generazione_reperti/` | Generatori testo (Ollama) e immagini (Stable Diffusion) |
 | `infrastruttura_blockchain/` | `configtx.yaml`, Docker Compose, cryptogen, definizione collezioni PDC |
+| `scripts/` | Script operativi per ruolo (PG, PM, LAB), gestione rete e query |
+| `tests/` | Suite di test: ciclo di vita end-to-end, benchmark cifratura/IPFS e benchmark Hyperledger Caliper |
 
 ---
 
@@ -113,6 +115,28 @@ cd chaincode && go build -o /dev/null .
 cd cmd/upload && go build -o /dev/null .
 cd cmd/download && go build -o /dev/null .
 cd cmd/workflow && go build -o /dev/null .
+```
+
+---
+
+## Test e valutazione
+
+La cartella `tests/` raccoglie la validazione funzionale e la valutazione prestazionale del sistema. Si lancia tutto con `tests/run_all.sh`, oppure ogni gruppo separatamente.
+
+| Gruppo | Cosa verifica |
+|--------|---------------|
+| `tests/ciclo_vita/` | Test end-to-end del ciclo di vita del reperto: dal sequestro alla riconsegna, controllando stati e permessi per ogni organizzazione |
+| `tests/cifratura_ipfs/` | Benchmark della pipeline di cifratura AES-256-GCM e upload/download su IPFS, al variare della dimensione dei file |
+| `tests/fabric_caliper/` | Benchmark di throughput e latenza con Hyperledger Caliper sui workload `read`, `query-mix` e `create` |
+
+Gli output prodotti dalle esecuzioni (report HTML Caliper e CSV) sono in `tests/results/`. In sintesi, sulle operazioni di lettura il sistema sostiene il carico imposto fino a 75 tps con latenza media intorno a 0,02 s e nessuna transazione fallita; le `query-mix` si comportano in modo analogo fino a 50 tps. Le operazioni di `create`, che comportano scritture su collezioni private e cifratura, raggiungono throughput più bassi (fino a circa 2 tps nelle prove) con latenza media nell'ordine del secondo, coerentemente con il maggior costo di endorsement e disseminazione dei dati privati.
+
+```bash
+# tutta la suite
+./tests/run_all.sh
+
+# solo i benchmark Caliper (richiede rete attiva e Node.js)
+./tests/fabric_caliper/run.sh
 ```
 
 ---
