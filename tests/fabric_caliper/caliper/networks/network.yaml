@@ -1,0 +1,59 @@
+name: coc-fabric-caliper
+version: "2.0.0"
+
+caliper:
+  blockchain: fabric
+
+channels:
+  - channelName: canale-coc
+    contracts:
+      - id: reperto
+
+organizations:
+  - mspid: PGMSP
+    identities:
+      certificates:
+        - name: Admin
+          clientPrivateKey:
+            path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/pg.it/users/Admin@pg.it/msp/keystore/priv_sk"
+          clientSignedCert:
+            path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/pg.it/users/Admin@pg.it/msp/signcerts/Admin@pg.it-cert.pem"
+    peers:
+      - endpoint: localhost:7051
+        tlsCACerts:
+          path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/pg.it/peers/peer0.pg.it/tls/ca.crt"
+        grpcOptions:
+          ssl-target-name-override: peer0.pg.it
+          grpc.keepalive_time_ms: 600000
+
+  - mspid: PMMSP
+    identities:
+      certificates:
+        - name: Admin
+          clientPrivateKey:
+            path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/pm.it/users/Admin@pm.it/msp/keystore/priv_sk"
+          clientSignedCert:
+            path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/pm.it/users/Admin@pm.it/msp/signcerts/Admin@pm.it-cert.pem"
+    peers:
+      - endpoint: localhost:8051
+        tlsCACerts:
+          path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/pm.it/peers/peer0.pm.it/tls/ca.crt"
+        grpcOptions:
+          ssl-target-name-override: peer0.pm.it
+          grpc.keepalive_time_ms: 600000
+
+  - mspid: LABMSP
+    identities:
+      certificates:
+        - name: Admin
+          clientPrivateKey:
+            path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/lab.it/users/Admin@lab.it/msp/keystore/priv_sk"
+          clientSignedCert:
+            path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/lab.it/users/Admin@lab.it/msp/signcerts/Admin@lab.it-cert.pem"
+    peers:
+      - endpoint: localhost:9051
+        tlsCACerts:
+          path: "../../../infrastruttura_blockchain/certificati_pki/peerOrganizations/lab.it/peers/peer0.lab.it/tls/ca.crt"
+        grpcOptions:
+          ssl-target-name-override: peer0.lab.it
+          grpc.keepalive_time_ms: 600000

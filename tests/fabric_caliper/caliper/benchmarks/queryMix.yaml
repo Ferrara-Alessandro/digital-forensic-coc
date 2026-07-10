@@ -1,0 +1,125 @@
+test:
+  name: coc-query-mix
+  description: Mix query ReadReperto / RepertoExists / OttieniStoriaReperto — curva completa 5–400 tps (60s per round, 4 worker)
+  workers:
+    type: local
+    number: 4
+  rounds:
+    - label: querymix-05tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-10tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 10
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-25tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 25
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-50tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-75tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 75
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-100tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-150tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 150
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-200tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 200
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-300tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 300
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: querymix-400tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: workloads/queryMix.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+
+monitor:
+  interval: 1
+  type:
+    - process
+  process:
+    - metric: cpu
+    - metric: memory

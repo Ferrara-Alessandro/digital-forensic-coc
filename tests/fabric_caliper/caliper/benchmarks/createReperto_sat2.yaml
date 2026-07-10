@@ -1,0 +1,45 @@
+test:
+  name: coc-create-reperto-saturazione-spinta
+  description: Invoke CreaReperto — ricerca del punto di saturazione (carichi elevati, 60s ciascuno)
+  workers:
+    type: local
+    number: 4
+  rounds:
+    - label: create-100tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: workloads/createReperto_sat.js
+        arguments:
+          contractId: reperto
+    - label: create-200tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 200
+      workload:
+        module: workloads/createReperto_sat.js
+        arguments:
+          contractId: reperto
+    - label: create-400tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: workloads/createReperto_sat.js
+        arguments:
+          contractId: reperto
+
+monitor:
+  interval: 1
+  type:
+    - process
+  process:
+    - metric: cpu
+    - metric: memory

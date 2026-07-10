@@ -1,0 +1,70 @@
+test:
+  name: coc-read-reperto-saturazione
+  description: Query ReadReperto — curva di saturazione (carichi elevati, 60s ciascuno)
+  workers:
+    type: local
+    number: 4
+  rounds:
+    - label: read-100tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-150tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 150
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-200tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 200
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-300tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 300
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+    - label: read-400tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: workloads/readReperto.js
+        arguments:
+          contractId: reperto
+          repertoId: REP-BENCH-CALIPER
+
+monitor:
+  interval: 1
+  type:
+    - process
+  process:
+    - metric: cpu
+    - metric: memory

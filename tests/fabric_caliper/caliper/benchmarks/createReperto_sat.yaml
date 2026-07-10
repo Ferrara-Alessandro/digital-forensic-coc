@@ -1,0 +1,55 @@
+test:
+  name: coc-create-reperto-saturazione
+  description: Invoke CreaReperto (endorsement PG+PM) — curva di saturazione (carichi crescenti, 60s ciascuno)
+  workers:
+    type: local
+    number: 1
+  rounds:
+    - label: create-5tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+    - label: create-10tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 10
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+    - label: create-25tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 25
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+    - label: create-50tps-60s
+      txDuration: 60
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workloads/createReperto.js
+        arguments:
+          contractId: reperto
+
+monitor:
+  interval: 1
+  type:
+    - process
+  process:
+    - metric: cpu
+    - metric: memory
