@@ -1,0 +1,158 @@
+
+========== Workflow ciclo vita reperto ==========
+
+[17:30:09] Preflight canale canale-coc
+
+[17:30:09] 0b) RegistraDocumentoConTransient VERBALE_SOPRALLUOGO sul caso CASO-WF-TEST (senza reperto)
+[34m2026-07-10 15:30:13.103 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [92d4780d71c95de620e225b7a2e02e14ffeaf005dd8d8e09f085863f69ca6e53] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:30:13.112 UTC 0002 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [92d4780d71c95de620e225b7a2e02e14ffeaf005dd8d8e09f085863f69ca6e53] committed with status (VALID) at peer0.pm.it:8051
+[34m2026-07-10 15:30:13.112 UTC 0003 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:30:13] 0) CreaReperto id=REP-WF-1783697409 (solo scheda custodia, endorsement PG+PM)
+[34m2026-07-10 15:30:15.570 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [40daeb5b48c3be5011576f600660b89c894690065abc84cbf98bca5accb2f8ec] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:30:15.576 UTC 0002 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [40daeb5b48c3be5011576f600660b89c894690065abc84cbf98bca5accb2f8ec] committed with status (VALID) at peer0.pm.it:8051
+[34m2026-07-10 15:30:15.576 UTC 0003 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:30:18] Sincronizzazione: attesa finche' peer0.pm vede REP-WF-1783697409 (max 90s)...
+
+[17:30:18] PM allineato (0s)
+
+[17:30:19] 0c) RegistraDocumentoConTransient VERBALE_SEQUESTRO collegato al reperto
+[34m2026-07-10 15:30:22.275 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [1d8e63a9382c086f9435ae494f9c58aa9db612aa7e0323a9500aa836af2a40d0] committed with status (VALID) at peer0.pm.it:8051
+[34m2026-07-10 15:30:22.283 UTC 0002 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [1d8e63a9382c086f9435ae494f9c58aa9db612aa7e0323a9500aa836af2a40d0] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:30:22.283 UTC 0003 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:30:22] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:30:22] PG allineato (stato) (0s)
+
+[17:30:22] Sincronizzazione PM: attesa condizione (max 60s) per REP-WF-1783697409...
+
+[17:30:22] PM allineato (condizione) (0s)
+
+[17:30:22] 1) Read: SEQUESTRATO, custode = id distretto istituzionale (DIST-1)
+{
+  "idCaso": "CASO-WF-TEST",
+  "idAgente": "AG-PG-INIZ",
+  "idDistretto": "DIST-1",
+  "idReperto": "REP-WF-1783697409",
+  "dataOraPrelievo": "2026-07-10T15:30:13Z",
+  "descrizioneBene": "Reperto workflow test",
+  "stato": "SEQUESTRATO",
+  "custodeAttuale": "DIST-1",
+  "idVerbaleSequestro": "DOC-SEQUESTRO-REP-WF-1783697409"
+}
+
+[17:30:23] 2) RichiediAnalisi (PM): tipo analisi + DECRETO_ACCERTAMENTO verso LAB-TEST
+[34m2026-07-10 15:30:25.853 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [e9bba850eb99d36864e21c27f8579496a6e9888178dabf397d40f4fb9343d575] committed with status (VALID) at peer0.pm.it:8051
+[34m2026-07-10 15:30:25.853 UTC 0002 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:30:25] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:30:26] PG allineato (stato) (0s)
+
+[17:30:26] 3) Read: ATTESA_TRASPORTO, riferimento decreto on-chain
+{
+  "stato": "ATTESA_TRASPORTO",
+  "custodeAttuale": "DIST-1",
+  "idDecretoAccertamento": "e9bba850eb99d36864e21c27f8579496a6e9888178dabf397d40f4fb9343d575"
+}
+
+[17:30:26] 4) AvviaTrasporto (PG only)
+[34m2026-07-10 15:30:29.011 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [f8d8698a853124218663f4adfe55ababd31becd54a83e8ed7274c01425e62d1e] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:30:29.011 UTC 0002 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:30:29] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:30:29] PG allineato (stato) (0s)
+
+[17:30:29] Sincronizzazione LAB: attesa condizione (max 60s) per REP-WF-1783697409...
+
+[17:31:30] LAB allineato (44s)
+
+[17:31:30] 5) Read: IN_TRANSITO
+
+[17:31:30] 6) RiceviInLaboratorio (LAB): idLaboratorio = destinazione decreto
+[34m2026-07-10 15:31:33.347 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [10ac7db4e8c41ba9254089865399071ee546b5d33d136a84de5a87715f7311df] committed with status (VALID) at peer0.lab.it:9051
+[34m2026-07-10 15:31:33.347 UTC 0002 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:31:33] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:31:33] PG allineato (stato) (0s)
+
+[17:31:33] 7) Read: IN_ANALISI, custode = ID laboratorio (non MSP)
+{
+  "stato": "IN_ANALISI",
+  "custodeAttuale": "LAB-TEST"
+}
+
+[17:31:33] 8) CompletaAnalisi (LAB + endorse PG): RELAZIONE_TECNICA, stato ATTESA_RITIRO
+[34m2026-07-10 15:31:36.252 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [12788cebc960e88c7c834d2e08b326a338af08f63b8bbdb74fac8adf2d9acd31] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:31:36.257 UTC 0002 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [12788cebc960e88c7c834d2e08b326a338af08f63b8bbdb74fac8adf2d9acd31] committed with status (VALID) at peer0.lab.it:9051
+[34m2026-07-10 15:31:36.257 UTC 0003 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:31:36] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:31:36] PG allineato (stato) (0s)
+
+[17:31:36] 9) Read: ATTESA_RITIRO, riferimento relazione tecnica
+{
+  "stato": "ATTESA_RITIRO",
+  "idRelazioneTecnica": "12788cebc960e88c7c834d2e08b326a338af08f63b8bbdb74fac8adf2d9acd31"
+}
+
+[17:31:36] 9b) PreparaRiconsegna (LAB): conferma formale pronto per ritiro PG
+[34m2026-07-10 15:31:41.420 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [730a5f79bb711923f3c75c3b7c9312d45651d552f5e4b8a35e51fb856fc3c152] committed with status (VALID) at peer0.lab.it:9051
+[34m2026-07-10 15:31:41.421 UTC 0002 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:31:41] 10) AvviaTrasporto (PG): ritorno verso sede da ATTESA_RITIRO
+[34m2026-07-10 15:31:43.786 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [9752afedcfe2f752e497615f98c3d9179597f606c1c6814ddf5cf1ce5e5ab060] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:31:43.787 UTC 0002 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:31:43] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:31:44] PG allineato (stato) (0s)
+
+[17:31:44] 11) DepositaInSede (PG): SEQUESTRATO + custode distretto + VERBALE_RICONSEGNA
+[34m2026-07-10 15:31:46.539 UTC 0001 INFO[0m [chaincodeCmd] [34;1mClientWait[0m -> txid [95faf3cb90b800cb19114e3381ee459406bb55c4e780ced981a639340a26bc49] committed with status (VALID) at peer0.pg.it:7051
+[34m2026-07-10 15:31:46.539 UTC 0002 INFO[0m [chaincodeCmd] [34;1mchaincodeInvokeOrQuery[0m -> Chaincode invoke successful. result: status:200 
+
+[17:31:46] Sincronizzazione PG: attesa condizione (max 30s) per REP-WF-1783697409...
+
+[17:31:46] PG allineato (stato) (0s)
+
+[17:31:46] 12) Read finale: SEQUESTRATO, custode DIST-1, tipi documento validati on-chain
+{
+  "idCaso": "CASO-WF-TEST",
+  "idAgente": "AG-PG-INIZ",
+  "idDistretto": "DIST-1",
+  "idReperto": "REP-WF-1783697409",
+  "dataOraPrelievo": "2026-07-10T15:30:13Z",
+  "tipoAnalisi": "Perizia DNA",
+  "descrizioneBene": "Reperto workflow test",
+  "stato": "SEQUESTRATO",
+  "custodeAttuale": "DIST-1",
+  "laboratorioDestinazione": "LAB-TEST",
+  "idVerbaleSequestro": "DOC-SEQUESTRO-REP-WF-1783697409",
+  "idDecretoAccertamento": "e9bba850eb99d36864e21c27f8579496a6e9888178dabf397d40f4fb9343d575",
+  "idRelazioneTecnica": "12788cebc960e88c7c834d2e08b326a338af08f63b8bbdb74fac8adf2d9acd31",
+  "idVerbaleRiconsegna": "95faf3cb90b800cb19114e3381ee459406bb55c4e780ced981a639340a26bc49"
+}
+{
+  "idDecretoAccertamento": "e9bba850eb99d36864e21c27f8579496a6e9888178dabf397d40f4fb9343d575",
+  "idRelazioneTecnica": "12788cebc960e88c7c834d2e08b326a338af08f63b8bbdb74fac8adf2d9acd31",
+  "idVerbaleRiconsegna": "95faf3cb90b800cb19114e3381ee459406bb55c4e780ced981a639340a26bc49"
+}
+
+[17:31:47] 13) OttieniStoriaReperto (PG): audit su world state
+
+[17:31:47] Voci storia: 8
+{
+  "txId": "95faf3cb90b800cb19114e3381ee459406bb55c4e780ced981a639340a26bc49",
+  "timestamp": "2026-07-10T15:31:44.440Z",
+  "hasReperto": true
+}
+
+
+[17:31:47] OK workflow completo su id=REP-WF-1783697409
+ID_REPERTO_PROVATO=REP-WF-1783697409
