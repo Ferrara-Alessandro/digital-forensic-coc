@@ -1,0 +1,66 @@
+# --- Infrastruttura Hyperledger & Docker ---
+infrastruttura_blockchain/canal_crea.pb
+infrastruttura_blockchain/certificati_pki/
+infrastruttura_blockchain/*.block
+infrastruttura_blockchain/atti_canale/
+bin/
+config/
+crypto-config/
+docker-compose-*.yaml
+vendor/
+.env
+.env.*
+
+# --- Cartelle non parte del repository ---
+tesi/
+overleaf/
+Papers/
+tmp/
+uploads/
+.tools/
+.venv_pdf/
+tesi_overleaf.zip
+
+# --- Ambiente Python ---
+generazione_reperti/.venv/
+venv/
+__pycache__/
+*.pyc
+
+# --- Output benchmark e artefatti generati ---
+benchmark_output/
+benchmark_*.csv
+.tmp_benchmark_ingest/
+.tmp_benchmark_*/
+tests/.work/
+downloads/
+cmd/upload/upload
+cmd/download/download
+cmd/workflow/workflow
+chaincode/chaincode
+infrastruttura_blockchain/reperto_*.tar.gz
+generazione_reperti/immagini/*.jpg
+generazione_reperti/immagini/*.png
+generazione_reperti/testi/reperto_*.txt
+!generazione_reperti/testi/.gitkeep
+
+# --- Risultati test (rigenerabili) ---
+tests/results/caliper/archive-*/
+tests/results/saturation/
+tests/results/cifratura_*_scaled.log
+tests/results/cifratura_download_1024.log
+tests/results/cifratura_upload_run.log
+tests/results/cifratura_upload_*.csv
+tests/results/cifratura_download_*.csv
+!tests/results/cifratura_upload_20260630-125941.csv
+!tests/results/cifratura_download_20260702-083516.csv
+
+*.log
+!tests/results/ciclo_vita_workflow.log
+
+# --- Editor & Strumenti ---
+.vscode/
+node_modules/
+tests/fabric_caliper/caliper/node_modules/
+tests/fabric_caliper/caliper/report.html
+.DS_Store
