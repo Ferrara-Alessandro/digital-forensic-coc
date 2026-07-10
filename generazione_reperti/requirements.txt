@@ -1,0 +1,5 @@
+# Generazione immagini (Stable Diffusion)
+torch
+diffusers
+transformers
+accelerate
