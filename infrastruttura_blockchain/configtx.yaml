@@ -1,0 +1,123 @@
+# Rete CoC: PG, PM, LAB + orderer. Profili CocGenesis (genesis.block) e CocChannel (canale-coc).
+
+Organizations:
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: certificati_pki/ordererOrganizations/example.com/msp
+        Policies:
+            Readers: {Type: Signature, Rule: "OR('OrdererMSP.member')"}
+            Writers: {Type: Signature, Rule: "OR('OrdererMSP.member')"}
+            Admins:  {Type: Signature, Rule: "OR('OrdererMSP.admin')"}
+
+    - &PGOrg
+        Name: PGOrg
+        ID: PGMSP
+        MSPDir: certificati_pki/peerOrganizations/pg.it/msp
+        Policies:
+            Readers: {Type: Signature, Rule: "OR('PGMSP.admin', 'PGMSP.peer', 'PGMSP.client')"}
+            Writers: {Type: Signature, Rule: "OR('PGMSP.admin', 'PGMSP.client')"}
+            Admins:  {Type: Signature, Rule: "OR('PGMSP.admin')"}
+        AnchorPeers:
+            - Host: peer0.pg.it
+              Port: 7051
+
+    - &PMOrg
+        Name: PMOrg
+        ID: PMMSP
+        MSPDir: certificati_pki/peerOrganizations/pm.it/msp
+        Policies:
+            Readers: {Type: Signature, Rule: "OR('PMMSP.admin', 'PMMSP.peer', 'PMMSP.client')"}
+            Writers: {Type: Signature, Rule: "OR('PMMSP.admin', 'PMMSP.client')"}
+            Admins:  {Type: Signature, Rule: "OR('PMMSP.admin')"}
+        AnchorPeers:
+            - Host: peer0.pm.it
+              Port: 8051
+
+    - &LABOrg
+        Name: LABOrg
+        ID: LABMSP
+        MSPDir: certificati_pki/peerOrganizations/lab.it/msp
+        Policies:
+            Readers: {Type: Signature, Rule: "OR('LABMSP.admin', 'LABMSP.peer', 'LABMSP.client')"}
+            Writers: {Type: Signature, Rule: "OR('LABMSP.admin', 'LABMSP.client')"}
+            Admins:  {Type: Signature, Rule: "OR('LABMSP.admin')"}
+        AnchorPeers:
+            - Host: peer0.lab.it
+              Port: 9051
+
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+    Orderer: &OrdererCapabilities
+        V2_0: true
+    Application: &ApplicationCapabilities
+        V2_5: true
+
+Application: &ApplicationDefaults
+    Organizations:
+    Policies:
+        Readers: {Type: ImplicitMeta, Rule: "ANY Readers"}
+        Writers: {Type: ImplicitMeta, Rule: "ANY Writers"}
+        Admins:  {Type: ImplicitMeta, Rule: "MAJORITY Admins"}
+        Endorsement: {Type: ImplicitMeta, Rule: "MAJORITY Endorsement"}
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+    OrdererType: etcdraft
+    Etcdraft:
+        Consenters:
+        - Host: orderer.example.com
+          Port: 7050
+          ClientTLSCert: certificati_pki/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+          ServerTLSCert: certificati_pki/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+    Addresses:
+        - orderer.example.com:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Organizations:
+    Policies:
+        Readers: {Type: ImplicitMeta, Rule: "ANY Readers"}
+        Writers: {Type: ImplicitMeta, Rule: "ANY Writers"}
+        Admins:  {Type: ImplicitMeta, Rule: "MAJORITY Admins"}
+        BlockValidation: {Type: ImplicitMeta, Rule: "ANY Writers"}
+    Capabilities:
+        <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+    Policies:
+        Readers: {Type: ImplicitMeta, Rule: "ANY Readers"}
+        Writers: {Type: ImplicitMeta, Rule: "ANY Writers"}
+        Admins:  {Type: ImplicitMeta, Rule: "MAJORITY Admins"}
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
+    CocGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            CocConsortium:
+                Organizations:
+                    - *PGOrg
+                    - *PMOrg
+                    - *LABOrg
+
+    CocChannel:
+        <<: *ChannelDefaults
+        Consortium: CocConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *PGOrg
+                - *PMOrg
+                - *LABOrg
+            Capabilities:
+                <<: *ApplicationCapabilities

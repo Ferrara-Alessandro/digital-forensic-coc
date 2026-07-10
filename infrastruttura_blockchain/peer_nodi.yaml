@@ -1,0 +1,105 @@
+version: '3.7'
+# Docker Compose per i peer PG, PM e LAB (stesso mount coc-pki dell'orderer).
+
+networks:
+  rete-coc:
+    external: true
+
+x-peer-base: &peer-base
+  image: hyperledger/fabric-peer:2.5.15
+  environment:
+    - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+    - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=rete-coc
+    - FABRIC_LOGGING_SPEC=INFO
+    - CORE_PEER_TLS_ENABLED=true
+    - CORE_PEER_GOSSIP_USELEADERELECTION=true
+    - CORE_PEER_GOSSIP_ORGLEADER=false
+    - CORE_PEER_PROFILE_ENABLED=false
+  volumes:
+    - /var/run/:/host/var/run/
+    - .:/etc/hyperledger/coc-pki
+  networks:
+    - rete-coc
+
+services:
+  peer0.pg.it:
+    <<: *peer-base
+    container_name: peer0.pg.it
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=rete-coc
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_ID=peer0.pg.it
+      - CORE_PEER_ADDRESS=peer0.pg.it:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.pg.it:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.pg.it:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.pg.it:7051
+      - CORE_PEER_LOCALMSPID=PGMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pg.it/peers/peer0.pg.it/msp
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pg.it/peers/peer0.pg.it/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pg.it/peers/peer0.pg.it/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pg.it/peers/peer0.pg.it/tls/ca.crt
+    ports:
+      - 7051:7051
+
+  peer0.pm.it:
+    <<: *peer-base
+    container_name: peer0.pm.it
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=rete-coc
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_ID=peer0.pm.it
+      - CORE_PEER_ADDRESS=peer0.pm.it:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.pm.it:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.pm.it:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.pm.it:8051
+      - CORE_PEER_LOCALMSPID=PMMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pm.it/peers/peer0.pm.it/msp
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pm.it/peers/peer0.pm.it/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pm.it/peers/peer0.pm.it/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/pm.it/peers/peer0.pm.it/tls/ca.crt
+    ports:
+      - 8051:8051
+
+  peer0.lab.it:
+    <<: *peer-base
+    container_name: peer0.lab.it
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=rete-coc
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_ID=peer0.lab.it
+      - CORE_PEER_ADDRESS=peer0.lab.it:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.lab.it:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.lab.it:9051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.lab.it:9051
+      - CORE_PEER_LOCALMSPID=LABMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/lab.it/peers/peer0.lab.it/msp
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/lab.it/peers/peer0.lab.it/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/lab.it/peers/peer0.lab.it/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/coc-pki/certificati_pki/peerOrganizations/lab.it/peers/peer0.lab.it/tls/ca.crt
+    ports:
+      - 9051:9051
